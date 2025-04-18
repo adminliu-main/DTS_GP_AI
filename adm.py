@@ -3,24 +3,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+class EmptyDataFrameError(Exception):
+    pass
+
 def jiancha(data1:pd.DataFrame):
+    #检查提供的DataFrame是否为空，如果为空报错
     data=pd.DataFrame(data1)
-    if data.empty:
-        linshi=True
-        print("提供的pandas.core.frame.DataFrame为空")
-        return(False)
+    if isinstance(data, pd.DataFrame) and data.empty:
+        raise EmptyDataFrameError("提供的 pandas.core.frame.DataFrame 为空")
     return(data)
-    
+
 def unique_values_columns(data1:pd.DataFrame,name:str):
-    if jiancha(data1)==False:
-        return(-1)
     data=jiancha(data1)
     # 检测 参数name 是否为空
-    if name == "":
-        linshi1=True
+    if not name:
         print("提供的列名为空")
         print("列名:",data.columns)
-        return(-1)
     if name in data.columns:
         unique_values = data[name].unique()
         print("列的唯一值：", unique_values)
@@ -29,15 +27,11 @@ def unique_values_columns(data1:pd.DataFrame,name:str):
         print("列名:",data.columns)
       
 def year_back(data1:pd.DataFrame,name:str=None):
-    year_list=[]
-    linshi=[]
-    for i in range(2021-1980+1):
-        a=1980+i
-        year_list.append(str(a))
+    #生成年份列表，可添加额外列名。
+    year_list = [str(year) for year in range(1980, 2021 + 1)]
     if name != None:
-        linshi.append(str(name))        
-    linshi.extend(year_list)
-    return(linshi)
+        year_list.append(str(name))        
+    return(year_list)
         
 
 
@@ -68,6 +62,6 @@ def show_result_line(data:pd.DataFrame,name:str):
     plt.ylabel('value')
     ax = plt.gca()
     ax.invert_yaxis()
-    fig = plt.gcf()
-    fig.savefig('output.png')
+    #fig = plt.gcf()
+    #fig.savefig('output.png')
     #plt.show()
