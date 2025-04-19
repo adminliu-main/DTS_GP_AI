@@ -79,8 +79,8 @@ def linechart(chutu:int,x_data:list,y_data:list,ziti:str=None,title_name:str=Non
     if Y_name==None:
         Y_name="value"
     plt.ylabel(Y_name)
-    ax = plt.gca()
-    ax.invert_yaxis()
+    #ax = plt.gca()
+    #ax.invert_yaxis()
     if chutu==0:
         fig = plt.gcf()
         fig.savefig(f'{title_name}.png')
@@ -194,9 +194,6 @@ def mean_year_data(data:pd.DataFrame,year1:int=None,region_num:int=None,region:s
     return(mean_by_region)
 
         
-    
-
-
 def show_result_sum(chutu:int,data:pd.DataFrame,weishu:int,ziti:str,title:int=None,diqu:int=None):
     year_list=year_back(data)
     sum_list=[]
