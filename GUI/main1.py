@@ -10,8 +10,8 @@ imports_data=data[data['Features'] == 'imports ']
 exports_data=data[data['Features'] == 'exports ']
 net_generation_data=data[data['Features'] == 'net generation']
 selected_countries = ['China', 'United States', 'India', 'Russia', 'Japan']
-
-#ad.year_chart(data,selected_countries)
+a =1
+#ad.year_chart(data,selected_countries,'distribution losses')
 #ad.year_chart(data,selected_countries)
 #ad.year_chart(data,selected_countries)
 #ad.year_chart(data,selected_countries)
@@ -20,10 +20,14 @@ data1=ad.mean_year_data(net_generation_data,2000,2021)[0]
 selected_data = data1[data1['Country'].isin(selected_countries)]
 #ad.plt_showbar(selected_data,selected_countries,(12,6),"2000 - 2021 年选定国家平均年发电量比较","国家","平均年发电量")
 
-max_avg_country = data1.loc[data1['Average Generation'].idxmax()]
-min_avg_country = data1.loc[data1['Average Generation'].idxmin()]
+#max_avg_country = data1.loc[data1['Average Generation'].idxmax()]
+#min_avg_country = data1.loc[data1['Average Generation'].idxmin()]
 
-print("\n该时期最高平均发电量的国家：")
-print(max_avg_country[['Country', 'Average Generation']])
-print("\n该时期最低平均发电量的国家：")
-print(min_avg_country[['Country', 'Average Generation']])
+#print("\n该时期最高平均发电量的国家：")
+#print(max_avg_country[['Country', 'Average Generation']])
+#print("\n该时期最低平均发电量的国家：")
+#print(min_avg_country[['Country', 'Average Generation']])
+
+ad.reattach(data,1980,2021).to_csv('test.csv', index=False)
+
+    

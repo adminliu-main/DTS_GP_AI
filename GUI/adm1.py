@@ -93,7 +93,7 @@ def years2(start:int,stop:int):
    
 def year_chart(data:pd.DataFrame,selected_countries:list,selected_features:str):
     years=years1()
-    #data=data[data['Features'] == selected_features]
+    data=data[data['Features'] == selected_features]
     selected_data = data[data['Country'].isin(selected_countries)][['Country'] + years]
     title_name=selected_features.capitalize()+" Trend (1980-2021)"
     plt_show(selected_data,years,(12,6),title_name,"Years",selected_features.capitalize())
@@ -150,7 +150,32 @@ def mean_year_data(data:pd.DataFrame,year_start:int=None,year_stop:int=None,regi
     data1 = data[['Country'] + years]
     data2['Country']=data['Country'] 
     data2['Average Generation'] = data1[years].mean(axis=1)
+
     return(data2,years)
 
+def reattach(data:pd.DataFrame,year_start:int=None,year_stop:int=None):
+    
+    result=0
+    grouped = data.groupby('Country') #按照国家分组
+    new = pd.DataFrame(columns=data.columns)
+    for country, group in grouped: 
+        new = pd.concat([new, group], ignore_index=True)
+        net_consumption=pd.DataFrame()
+        new_df = pd.DataFrame()
+        last_columns = group.iloc[2:, :]
+        new_df = pd.concat([new_df, last_columns], axis=1)
+        net_consumption = pd.DataFrame(columns=new_df.columns)
+        net_consumption.at[1, 'Features'] = 'net_consumption'
+        loss_data=group[group['Features'] == 'distribution losses'].reset_index(drop=True)
+        imports_data=group[group['Features'] == 'imports'].reset_index(drop=True)
+        exports_data=group[group['Features'] == 'exports'].reset_index(drop=True)
+        net_generation_data=group[group['Features'] == 'net generation'].reset_index(drop=True)
+        for i in range(1,43):
+     
+            year_cols=str(i+1979)
+            result =  net_generation_data[year_cols] + imports_data[year_cols] - exports_data[year_cols] - loss_data[year_cols]
+            net_consumption.at[1, year_cols] = result.values
+        new = pd.concat([new, net_consumption], ignore_index=True)
+    return(new)
  
 
