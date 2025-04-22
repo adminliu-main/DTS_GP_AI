@@ -31,12 +31,19 @@ data1=ad.reattach(data)
 max_avg_country = data1.loc[data1['Average net consumption'].idxmax()]
 min_avg_country = data1.loc[data1['Average net consumption'].idxmin()]
 
-print("\n该时期最高平均净消费量的国家：")
-print(max_avg_country[['Country', 'Average net consumption']])
-print("\n该时期最低平均净消费量的国家：")
-print(min_avg_country[['Country', 'Average net consumption']])
+#print("\n该时期最高平均净消费量的国家：")
+#print(max_avg_country[['Country', 'Average net consumption']])
+#print("\n该时期最低平均净消费量的国家：")
+#print(min_avg_country[['Country', 'Average net consumption']])
 
 #ad.mean_year_data(net_generation_data,2000,2021)[0].to_csv('test1.csv', index=False)
+print(len(data1))
+train_size = int(len(data1) * 0.8)
+print(train_size)
+train = data1[:train_size]
+test = data1[train_size:]
+train.to_csv('train.csv', index=False)
+test.to_csv('test.csv', index=False)
 
 
 
