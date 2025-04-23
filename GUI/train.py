@@ -14,10 +14,13 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.naive_bayes import GaussianNB
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C, ExpSineSquared
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
 
 
-
-a=4
+a=5
 b=1
 data = ad.read_preprocessing('GlobalElectricityStatistics.csv')
 years = [str(year) for year in range(1980, 2022)]
@@ -33,9 +36,8 @@ data=data[years]
 #train_data = data.iloc[:, :-data_test]
 #test_data = data.iloc[:, -data_test:]
 
-test_size = 0.03  # 测试集比例
+test_size =  0.2  # 测试集比例
 data_test = int(42 * test_size)
-print(data_test)
 
 
 #data[years] = data[years].astype(float)
@@ -158,4 +160,17 @@ if a==4: #XGR
         print(f"{year} 年的预测值为: {y_pred[0]}")
 
     
-  
+if a==5: #二项式回归模型
+    poly_features = PolynomialFeatures(degree=2)
+    linear_regression = LinearRegression()
+    model = make_pipeline(poly_features, linear_regression)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    print(y_pred)
+    print(y_test)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    print(f"均方根误差 (RMSE): {rmse}")
+    for year in range(2022, 2025):
+        X_test = np.array([year]).reshape(-1, 1)
+        y_pred = model.predict(X_test)
+        print(f"{year} 年的预测值为: {y_pred[0]}")
