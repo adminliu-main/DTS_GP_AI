@@ -187,6 +187,36 @@ def reattach(data:pd.DataFrame):
 
     return(new)
  
+def train_data(data:pd.DataFrame):
+    years=years2(1980,2021)
+    result=0
+    grouped = data.groupby('Country') #按照国家分组
+    new = pd.DataFrame(columns=data.columns)
+    for country, group in grouped: 
+        net_consumption=pd.DataFrame()
+        new_df = pd.DataFrame()
+        last_columns = group.iloc[2:, :]
+        new_df = pd.concat([new_df, last_columns], axis=1)
+        net_consumption = pd.DataFrame(columns=new_df.columns)
+        net_consumption.at[1, 'Features'] = 'net consumption'
+        net_consumption.at[1, 'Country'] = country
+        net_consumption.at[1, 'Region'] = group['Region'].reset_index(drop=True)[0]
+        loss_data=group[group['Features'] == 'distribution losses'].reset_index(drop=True)
+        imports_data=group[group['Features'] == 'imports'].reset_index(drop=True)
+        exports_data=group[group['Features'] == 'exports'].reset_index(drop=True)
+        net_generation_data=group[group['Features'] == 'net generation'].reset_index(drop=True)
+        for i in range(1,43):
+            year_cols=str(i+1979)
+            result =  net_generation_data[year_cols] + imports_data[year_cols] - exports_data[year_cols] - loss_data[year_cols]
+            net_consumption.at[1, year_cols] = result.values
+        
+
+        
+        new = pd.concat([new, net_consumption], ignore_index=True)
+
+
+    return(new)
+
 
 def reattach_odddd(data:pd.DataFrame):
     years=years2(1980,2021)
